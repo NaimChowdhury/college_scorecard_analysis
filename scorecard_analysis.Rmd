@@ -35,3 +35,15 @@ Create variables for directories
 data.dir <- '../CollegeScorecard_Raw_Data'
 output.dir <- '../outputs'
 ```
+
+## Preprocessing
+### import
+This chunk will eventually read in data for all years. Will get completed after we've settled on subsets. 
+__TO DO__
+- coerce needed columns to correct data type
+```{r preprocessing}
+import_all <- function() {
+    list.files(pattern = "*.csv") %>% 
+    map_df(~read_csv(., na = c("NULL")))
+}
+```
