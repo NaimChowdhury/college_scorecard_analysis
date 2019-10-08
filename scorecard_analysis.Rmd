@@ -1,0 +1,37 @@
+---
+title: "scorecard_analysis"
+author: "Sumitra, Jamie, and Naeem"
+date: "October 8, 2019"
+output: html_document
+---
+
+##Setup
+### options
+Set up global options
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy=TRUE)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=70))
+knitr::opts_chunk$set(fig.height=4, fig.width=6)
+```
+
+
+### libraries
+Load in needed libraries 
+```{r libraries}
+# Run these if you don't have these libraries yet
+# install.packages("tidyverse") 
+# install.packages("data.table")
+library(tidyverse) # For data processing and visualization
+library(data.table) # For creating tables
+
+spot_color = "#9ecae1" 
+text_color = "#525252"
+```
+
+### File management
+Create variables for directories
+```{r file_management}
+data.dir <- '../CollegeScorecard_Raw_Data'
+output.dir <- '../outputs'
+```
