@@ -55,3 +55,11 @@ import_all <- function() {
 scorecard_17 <- read_csv(file.path(home.dir, data.dir, "MERGED2017_18_PP.csv"), na = c("NULL", "PrivacySuppressed"))
 ```
 
+### Quality Measurements
+```{r}
+# What is the proportion of nulls in the MD_EARN_WNE_P10 column?
+length(scorecard_17$MD_EARN_WNE_P10[scorecard_17$MD_EARN_WNE_P10 == 'NULL']) /nrow(scorecard_17)
+
+# Since the proportion of nulls is 1, all of the rows in the column are NULL.
+```
+
