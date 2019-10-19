@@ -22,6 +22,10 @@ Initial change.
 
 - Come up with 2 good quality measurements
 
+- using the PCIP variables, how has the percentage of people seeking $X$ degree changed over time?
+
+- how has the proportion of full time faculty at an instutition changed over time?
+
 ### Variables of Interest
 
 - HCM2 (int) - schools that are on "heigtened cash monitoring 2", flagged with a 1
@@ -77,4 +81,24 @@ Initial change.
         6	Small Town (an incorporated place or Census-designated place with a population less than 25,000 and greater than or equal to 2,500 and located outside a CMSA or MSA)
         7	Rural, Outside MSA (any territory designated as rural by the Census Bureau that is outside a CMSA or MSA of a Large or Mid-Size City)
         8	Rural, Inside MSA (any territory designated as rural by the Census Bureau that is within a CMSA or MSA of a Large or Mid-Size City)
+
+- LATITUDE, LONGITUDE? Could possibly do a nice map of the location of low income schools, schools that are on HCM2, or some other info. May end up using!
+
+- CCBASIC (a classification of some kind. lots of super interesting values. where are all the faith based schools? what abotu law schools? tribal colleges?)
+
+- HBCU, PBI, ANNHI, TRIBAL, AANAPII, HSI, NANTI, MENONLY, WOMENONLY, RELAFFIL, almost all variables are boolean, but the relaffil is broken down by religion. revisit in the data dictionary!
+
+- ADM_RATE, ADM_RATE_ALL, admissions rate
+
+- UG, UGDS_WHITE, UGDS_BLACK etc., the share of students who are white, black, enrollment of all students, etc
+
+- Family income buckets variables 560-595
+
+- Family income buckets of students who receive Title IV financial aid, variables 596-619
+
+- TUITIONFEE_IN, TUITIONFEE_OUT, TUITIONFEE_PROG
+
+- AVGFACSAL (average faculty salary)
+
+-  PFTFAC (proportion of faculty that is full time)
 
