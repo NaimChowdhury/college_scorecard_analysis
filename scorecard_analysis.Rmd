@@ -8,6 +8,7 @@ output: html_document
 ##Setup
 ### options
 Set up global options
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy=TRUE)
@@ -32,6 +33,7 @@ text_color = "#525252"
 ### File management
 Create variables for directories
 ```{r file_management}
+home.dir <- getwd()
 data.dir <- '../CollegeScorecard_Raw_Data'
 output.dir <- '../outputs'
 ```
@@ -47,3 +49,9 @@ import_all <- function() {
     map_df(~read_csv(., na = c("NULL")))
 }
 ```
+
+### Test Import for small dataset
+```{r}
+scorecard_17 <- read_csv(file.path(home.dir, data.dir, "MERGED2017_18_PP.csv"), na = c("NULL", "PrivacySuppressed"))
+```
+
