@@ -14,11 +14,67 @@ In this project, Sumitra Sankarasubramanian, Jamie Hobbs, and Naeem will perform
 
 Initial change.
 
-### Current Goals:
+### Current Goals
 
 - Make a large merged CSV which contains the data spanning several years.
 
 - Write 9-15 questions for us to answer in our analysis.
 
 - Come up with 2 good quality measurements
+
+### Variables of Interest
+
+- HCM2 (int) - schools that are on "heigtened cash monitoring 2", flagged with a 1
+
+- PREDDEG (int) - predominant undergrad degree awarded, 0 1 2 3 4
+
+    - 0 not class
+
+    - 1 certificate degree
+
+    - 2 associates degree 
+
+    - 3 bachelor's degree
+
+    - 4 graduate degree
+
+- HIGHDEG (int) - highest degree awarded 0 1 2 3 4 (same as above)
+
+- REGION (int) - regiod id
+
+        1	New England (CT, ME, MA, NH, RI, VT)
+        2	Mid East (DE, DC, MD, NJ, NY, PA)
+        3	Great Lakes (IL, IN, MI, OH, WI)
+        4	Plains (IA, KS, MN, MO, NE, ND, SD)
+        5	Southeast (AL, AR, FL, GA, KY, LA, MS, NC, SC, TN, VA, WV)
+        6	Southwest (AZ, NM, OK, TX)
+        7	Rocky Mountains (CO, ID, MT, UT, WY)
+        8	Far West (AK, CA, HI, NV, OR, WA)
+        9	Outlying Areas (AS, FM, GU, MH, MP, PR, PW, VI)
+
+- LOCALE 
+
+        11	City: Large (population of 250,000 or more)
+        12	City: Midsize (population of at least 100,000 but less than 250,000)
+        13	City: Small (population less than 100,000)
+        21	Suburb: Large (outside principal city, in urbanized area with population of 250,000 or more)
+        22	Suburb: Midsize (outside principal city, in urbanized area with population of at least 100,000 but less than 250,000)
+        23	Suburb: Small (outside principal city, in urbanized area with population less than 100,000)
+        31	Town: Fringe (in urban cluster up to 10 miles from an urbanized area)
+        32	Town: Distant (in urban cluster more than 10 miles and up to 35 miles from an urbanized area)
+        33	Town: Remote (in urban cluster more than 35 miles from an urbanized area)
+        41	Rural: Fringe (rural territory up to 5 miles from an urbanized area or up to 2.5 miles from an urban cluster)
+        42	Rural: Distant (rural territory more than 5 miles but up to 25 miles from an urbanized area or more than 2.5 and up to 10 miles from an urban cluster)
+        43	Rural: Remote (rural territory more than 25 miles from an urbanized area and more than 10 miles from an urban cluster)
+
+- LOCALE2
+
+        1	Large City (a central city of a CMSA or MSA, with the city having a population greater than or equal to 250,000)
+        2	Mid-Size City (a central city of a CMSA or MSA, with the city having a population less than 250,000)
+        3	Urban Fringe of a Large City (any territory within a CMSA or MSA of a Large City and defined as urban by the Census Bureau)
+        4	Urban Fringe of a Mid-Size City (any territory within a CMSA or MSA of a Mid-Size City and defined as urban by the Census Bureau)
+        5	Large Town (an incorporated place or Census-designated place with a population greater than or equal to 25,000 and located outside a CMSA or MSA)
+        6	Small Town (an incorporated place or Census-designated place with a population less than 25,000 and greater than or equal to 2,500 and located outside a CMSA or MSA)
+        7	Rural, Outside MSA (any territory designated as rural by the Census Bureau that is outside a CMSA or MSA of a Large or Mid-Size City)
+        8	Rural, Inside MSA (any territory designated as rural by the Census Bureau that is within a CMSA or MSA of a Large or Mid-Size City)
 
