@@ -58,9 +58,9 @@ scorecard_17 <- read_csv(file.path(home.dir, data.dir, "MERGED2017_18_PP.csv"), 
 ### Subset and merge
 ```{r}
 multmerge = function(mypath){
-  years = c("96_97","97_98", "98_99", "99_00", "00_01", "01_02", "02_03", "03_04", "04_05", "05_06", "06_07", "07_08", "08_09", "09_10", "10_11", "11_12", "12_13", "13_14", "14_15", "15_16", "16_17", "17_18")
+  # years = c("96_97","97_98", "98_99", "99_00", "00_01", "01_02", "02_03", "03_04", "04_05", "05_06", "06_07", "07_08", "08_09", "09_10", "10_11", "11_12", "12_13", "13_14", "14_15", "15_16", "16_17", "17_18")
   filenames=list.files(path=mypath, pattern = "*.csv") %>% 
-  map_df(~read_csv(., col_types = cols_only(INSTNM = col_character(), HCM2 = col_integer()), na = c("", "NA")), .id = "years")
+  map_df(~read_csv(., col_types = cols_only(INSTNM = col_character(), HCM2 = col_integer(), PREDDEG = col_integer(), HIGHDEG = col_integer(), REGION = col_integer()), na = c("", "NA")), .id = years)
 }
 ```
 
@@ -73,3 +73,29 @@ length(scorecard_17$MD_EARN_WNE_P10[scorecard_17$MD_EARN_WNE_P10 == 'NULL']) /nr
 # Since the proportion of nulls is 1, all of the rows in the column are NULL.
 ```
 
+### Proportion of NA and duplicates in columns
+Below is an example of a function to generate data quality measures on every column. Let's do this after subset. 
+```{r}
+na_dupe_prop <- function(data, tag) {
+  
+    reportList <- data_frame() # initialize empty data frame
+    
+    ##### Determine the proportion of NAs in each column
+    # Count all NAs in all columns
+    countNA <- apply(data, 2, function(x) sum(is.na(x)))
+    # Calculate the proportion of all column values that are NA
+    propNA <- round(countNA / nrow(data), 2)
+
+    ##### Determine the number of rows that are duplicated
+    # Count all duplicate values in each column
+    countDuples <- apply(data, 2, function(x) sum(duplicated(x)))
+    # Calculate the proportion of all column values that are duplicates
+    propDuples <- round(countDuples / nrow(data)*100, 2)
+
+    reportList <- data.frame(cbind(names(propNA), propNA, propDuples))
+
+    write_csv(reportList, file.path(output.dir, paste0("na_dupe_prop", tag, ".csv")))
+}
+
+na_dupe_prop(scorecard_17, "17_18")
+```
