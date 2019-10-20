@@ -90,7 +90,7 @@ na_dupe_prop <- function(data, tag) {
     # Count all duplicate values in each column
     countDuples <- apply(data, 2, function(x) sum(duplicated(x)))
     # Calculate the proportion of all column values that are duplicates
-    propDuples <- round(countDuples / nrow(data)*100, 2)
+    propDuples <- round(countDuples / nrow(data), 2)
 
     reportList <- data.frame(cbind(names(propNA), propNA, propDuples))
 
@@ -99,3 +99,26 @@ na_dupe_prop <- function(data, tag) {
 
 na_dupe_prop(scorecard_17, "17_18")
 ```
+
+## Exploration (Playground)
+
+In this exploration section, we can use the most recent scorecard data to look into what parts of the data are interesting before we look over all years.
+### How much do schools really spend on their students?
+```{r}
+selective_schools <- scorecard_17 %>%
+    select(INSTNM, TUITIONFEE_IN, DEBT_MDN, UGDS_BLACK, UGDS_WHITE, INEXPFTE, ADM_RATE, AVGFACSAL) %>%
+    filter(ADM_RATE < .25)
+
+unselective_schools <- scorecard_17 %>%
+    select(INSTNM, TUITIONFEE_IN, DEBT_MDN, UGDS_BLACK, UGDS_WHITE, INEXPFTE, ADM_RATE, AVGFACSAL
+) %>%
+    filter(ADM_RATE < .95)
+
+
+# Only at the most expensive selective schools does per-student spending really go up with tuition 
+plot(selective_schools$TUITIONFEE_IN, selective_schools$INEXPFTE)
+
+# It's very similar at the less selective schools
+plot(unselective_schools$TUITIONFEE_IN, unselective_schools$INEXPFTE)
+```
+

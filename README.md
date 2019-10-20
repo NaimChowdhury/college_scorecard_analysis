@@ -26,6 +26,12 @@ Initial change.
 
 - how has the proportion of full time faculty at an instutition changed over time?
 
+- how has the number of Hispanic Serving institutions increased over time?
+
+- what proportion of schools have religious affiliations?
+
+- How much do schools spend on their students? Who spends the most on their students?
+
 ### Variables of Interest
 
 - HCM2 (int) - schools that are on "heigtened cash monitoring 2", flagged with a 1
@@ -101,4 +107,6 @@ Initial change.
 - AVGFACSAL (average faculty salary)
 
 -  PFTFAC (proportion of faculty that is full time)
+
+- to be continued...
 
