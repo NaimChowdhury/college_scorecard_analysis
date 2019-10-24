@@ -125,7 +125,7 @@ plot(selective_schools$TUITIONFEE_IN, selective_schools$INEXPFTE)
 plot(unselective_schools$TUITIONFEE_IN, unselective_schools$INEXPFTE)
 ```
 
-### Relationship between community college debt and future earnings
+### CC Debt vs. Future Earnings
 ```{r}
 debt_v_income <- scorecard_14 %>%
     filter(PREDDEG == 2) %>%
@@ -146,7 +146,7 @@ p
 cor(debt_v_income$DEBT_MDN, debt_v_income$MD_EARN_WNE_P8)
 
 ```
-
+### Debt vs. Accrediting Agency
 ```{r fig.width=8, fig.height=10, echo=FALSE}
 debt_v_accred <- scorecard_14 %>%
     select(-ACCREDAGENCY) %>%
@@ -164,4 +164,7 @@ p <- ggplot(debt_v_accred, aes(x=ACCREDAGENCY, y=DEBT_MDN)) +
               axis.text.x = element_text(angle = 90, hjust = 1))
 p
 ```
+
+
+
 
