@@ -32,6 +32,17 @@ Initial change.
 
 - How much do schools spend on their students? Who spends the most on their students?
 
+- Based on test scores, cost, size of school, and salary, which schools offer a good education?
+
+- What schools offer low job outcomes but high debt?
+
+- Do college outcomes vary by state? Which states have the highest and lowest earnings after graduation?
+
+- does data validate recent coverage of for profit schools?
+
+- average faculty salary vs in state tuition. color code by sector
+
+
 ### Variables of Interest
 
 - HCM2 (int) - schools that are on "heigtened cash monitoring 2", flagged with a 1
