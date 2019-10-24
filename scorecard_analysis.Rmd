@@ -147,5 +147,21 @@ cor(debt_v_income$DEBT_MDN, debt_v_income$MD_EARN_WNE_P8)
 
 ```
 
+```{r fig.width=8, fig.height=10, echo=FALSE}
+debt_v_accred <- scorecard_14 %>%
+    select(-ACCREDAGENCY) %>%
+    left_join(select(scorecard_17, ACCREDAGENCY, UNITID), by = "UNITID") %>%
+    select(INSTNM, CONTROL, DEBT_MDN, ACCREDAGENCY) %>%
+    mutate(ACCREDAGENCY = as.factor(ACCREDAGENCY)) %>%
+    drop_na()
 
+p <- ggplot(debt_v_accred, aes(x=ACCREDAGENCY, y=DEBT_MDN)) + 
+        geom_boxplot() +
+        labs(title="Debt by Accrediting Agency",
+             x="Agency", y = "Median Debt at Graduation") +
+        coord_flip() +
+        theme(plot.title = element_text(family = "Helvetica", color="#666666", face="bold", size=12, hjust=.5),
+              axis.text.x = element_text(angle = 90, hjust = 1))
+p
+```
 
