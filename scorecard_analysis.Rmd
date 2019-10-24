@@ -55,6 +55,7 @@ import_all <- function() {
 
 scorecard_14 <- read_csv(file.path(data.dir, 'MERGED2014_15_PP.csv'), na = c("NULL", "PrivacySuppressed")) 
 
+scorecard_16 <- read_csv(file.path(home.dir, data.dir, "MERGED2016_17_PP.csv"), na = c("NULL", "PrivacySuppressed"))
 scorecard_17 <- read_csv(file.path(home.dir, data.dir, "MERGED2017_18_PP.csv"), na = c("NULL", "PrivacySuppressed"))
 ```
 
@@ -125,7 +126,7 @@ plot(selective_schools$TUITIONFEE_IN, selective_schools$INEXPFTE)
 plot(unselective_schools$TUITIONFEE_IN, unselective_schools$INEXPFTE)
 ```
 
-### CC Debt vs. Future Earnings
+### CC Debt vs. Future Earnings by Control Type
 ```{r}
 debt_v_income <- scorecard_14 %>%
     filter(PREDDEG == 2) %>%
@@ -135,7 +136,7 @@ debt_v_income <- scorecard_14 %>%
 
 p <- ggplot(debt_v_income, aes(DEBT_MDN, MD_EARN_WNE_P8)) +
     geom_point(colour=spot_color, size = 2) +
-    #facet_wrap(~CONTROL, dir = "v") +
+    facet_wrap(~CONTROL, dir = "v") +
     theme(plot.title = element_text(color=text_color, face="bold", size=12, hjust=.5, lineheight=.65)) +
     geom_smooth(method="loess", se=FALSE) +
     scale_y_log10(labels = scales::comma) +
@@ -155,15 +156,89 @@ debt_v_accred <- scorecard_14 %>%
     mutate(ACCREDAGENCY = as.factor(ACCREDAGENCY)) %>%
     drop_na()
 
-p <- ggplot(debt_v_accred, aes(x=ACCREDAGENCY, y=DEBT_MDN)) + 
+debt_v_accred_plot <- ggplot(debt_v_accred, aes(x=ACCREDAGENCY, y=DEBT_MDN)) + 
         geom_boxplot() +
         labs(title="Debt by Accrediting Agency",
              x="Agency", y = "Median Debt at Graduation") +
         coord_flip() +
         theme(plot.title = element_text(family = "Helvetica", color="#666666", face="bold", size=12, hjust=.5),
               axis.text.x = element_text(angle = 90, hjust = 1))
-p
+debt_v_accred_plot
 ```
+
+### Loan debt over regions
+```{r}
+debt_v_region <- scorecard_14 %>% 
+  select(-REGION) %>% 
+  left_join(select(scorecard_17, REGION, UNITID), by = "UNITID") %>% 
+  select(INSTNM, CONTROL, DEBT_MDN, REGION) %>% 
+  mutate(REGION = as.factor(REGION)) %>% 
+  drop_na()
+
+
+levels(debt_v_region$REGION) <- c("U.S. Service Schools",
+                                  "New England (CT, ME, MA, NH, RI, VT)",
+                                  "Mid East (DE, DC, MD, NJ, NY, PA)",
+                                  "Great Lakes (IL, IN, MI, OH, WI)",
+                                  "Plains (IA, KS, MN, MO, NE, ND, SD)",
+                                  "Southeast (AL, AR, FL, GA, KY, LA, MS, NC, SC, TN, VA, WV)",
+                                  "Southwest (AZ, NM, OK, TX)",
+                                  "Rocky Mountains (CO, ID, MT, UT, WY)",
+                                  "Far West (AK, CA, HI, NV, OR, WA)",
+                                  "Outlying Areas (AS, FM, GU, MH, MP, PR, PW, VI")
+
+
+debt_v_region_plot <- ggplot(debt_v_region, aes(x = REGION, y = DEBT_MDN)) +
+  geom_boxplot() +
+  labs(title="Debt by Region", x="Region", y = "Median Debt at Graduation") +
+  coord_flip() +
+  theme(plot.title = element_text(color="#666666", face="bold", size=12, hjust=.5),
+              axis.text.x = element_text(angle = 90, hjust = 1))
+
+debt_v_region_plot  
+```
+
+### 
+```{r}
+install.packages(c("GGally", "hexbin", "repr", "psych"))
+
+scorecard.df <- scorecard_17 %>% 
+  select(INSTNM,CITY,STABBR,ZIP,ACCREDAGENCY,PREDDEG,HIGHDEG,HCM2,CONTROL,REGION,RELAFFIL,COSTT4_A,COSTT4_P,TUITIONFEE_IN,TUITIONFEE_OUT,TUITIONFEE_PROG,OPEID,OPEID6,MAIN,NUMBRANCH,ST_FIPS,CURROPER,ICLEVEL,OPEFLAG) 
+
+#scorecard.mapdf <- scorecard_17 %>% 
+  #select(INSTNM,CITY,STABBR,ZIP,ACCREDAGENCY,PREDDEG,HIGHDEG,HCM2,CONTROL,REGION,RELAFFIL,COSTT4_A,COSTT4_P,TUITIONFEE_IN,TUITIONFEE_OUT,TUITIONFEE_PROG,OPEID,OPEID6,MAIN,NUMBRANCH,ST_FIPS,CURROPER,ICLEVEL,OPEFLAG,LATITUDE,LONGITUDE) %>% filter(HCM2==1)
+
+scorecard.df$school_type[scorecard.df$CONTROL == 1] = 'Public'
+scorecard.df$school_type[scorecard.df$CONTROL == 2] = 'Private nonprofit'
+scorecard.df$school_type[scorecard.df$CONTROL == 3] = 'Private forprofit'
+  
+scorecard.df$hcm2_status[scorecard.df$HCM2 == 1] = 'Watch_Flag'
+scorecard.df$hcm2_status[scorecard.df$HCM2 == 0] = 'No_Flag'
+
+col_nam <- c('PREDDEG','HIGHDEG','ICLEVEL')
+            
+ggpairs(scorecard.df,
+    columns = col_nam,
+    aes(color = school_type, alpha = 0.4),
+    lower = list(continuous = 'points'),
+    upper = list(continuous = 'cor'))
+
+#Tried to map scorecard.mapdf, but not working for now.The map looks weird. 
+# install.packages("leaflet")
+# library('leaflet')
+# leaflet() %>%  addTiles() %>% addMarkers(lng=~LONGITUDE, lat=~LONGITUDE, popup=~sprintf('%s<br/>%s', ZIP, STABBR,CITY), data= scorecard.mapdf)
+```
+
+
+### Tuition vs. Debt
+```{r}
+TUITIONFEE_IN <- scorecard_16$TUITIONFEE_IN
+DEBT_MDN <- scorecard_16$DEBT_MDN
+ggplot(scorecard_16, aes(x = TUITIONFEE_IN, y = DEBT_MDN, color= factor(scorecard_16$CONTROL))) + geom_point()
+```
+
+
+
 
 
 
