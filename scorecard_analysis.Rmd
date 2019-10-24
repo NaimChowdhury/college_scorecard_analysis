@@ -52,6 +52,9 @@ import_all <- function() {
 
 ### Test Import for small dataset
 ```{r}
+
+scorecard_14 <- read_csv(file.path(data.dir, 'MERGED2014_15_PP.csv'), na = c("NULL", "PrivacySuppressed")) 
+
 scorecard_17 <- read_csv(file.path(home.dir, data.dir, "MERGED2017_18_PP.csv"), na = c("NULL", "PrivacySuppressed"))
 ```
 
@@ -121,4 +124,28 @@ plot(selective_schools$TUITIONFEE_IN, selective_schools$INEXPFTE)
 # It's very similar at the less selective schools
 plot(unselective_schools$TUITIONFEE_IN, unselective_schools$INEXPFTE)
 ```
+
+### Relationship between community college debt and future earnings
+```{r}
+debt_v_income <- scorecard_14 %>%
+    filter(PREDDEG == 2) %>%
+    select(DEBT_MDN, MD_EARN_WNE_P8, CONTROL) %>%
+    mutate(CONTROL = factor(CONTROL, labels = c("Public", "Private nonprofit", "Private for-profit"))) %>%
+    drop_na()
+
+p <- ggplot(debt_v_income, aes(DEBT_MDN, MD_EARN_WNE_P8)) +
+    geom_point(colour=spot_color, size = 2) +
+    #facet_wrap(~CONTROL, dir = "v") +
+    theme(plot.title = element_text(color=text_color, face="bold", size=12, hjust=.5, lineheight=.65)) +
+    geom_smooth(method="loess", se=FALSE) +
+    scale_y_log10(labels = scales::comma) +
+    labs(title="Relationship Between Size of Loan and \n Earnings 8 Years After Graduation \n By Type of School \n (Associate degrees only)",
+         x="Size of Original Loan", y="Earnings 8 Years After Graduation") 
+    
+p
+cor(debt_v_income$DEBT_MDN, debt_v_income$MD_EARN_WNE_P8)
+
+```
+
+
 
