@@ -61,11 +61,18 @@ scorecard_17 <- read_csv(file.path(home.dir, data.dir, "MERGED2017_18_PP.csv"), 
 
 ### Subset and merge
 ```{r}
+
 multmerge = function(mypath){
-  # years = c("96_97","97_98", "98_99", "99_00", "00_01", "01_02", "02_03", "03_04", "04_05", "05_06", "06_07", "07_08", "08_09", "09_10", "10_11", "11_12", "12_13", "13_14", "14_15", "15_16", "16_17", "17_18")
+  #years = c("96_97","97_98", "98_99", "99_00", "00_01", "01_02", "02_03", "03_04", "04_05", "05_06", "06_07", "07_08", "08_09", "09_10", "10_11", "11_12", "12_13", "13_14", "14_15", "15_16", "16_17", "17_18")
   filenames=list.files(path=mypath, pattern = "*.csv") %>% 
-  map_df(~read_csv(., col_types = cols_only(INSTNM = col_character(), HCM2 = col_integer(), PREDDEG = col_integer(), HIGHDEG = col_integer(), REGION = col_integer()), na = c("", "NA")), .id = years)
+  map_df(~read_csv(., col_types = cols_only(INSTNM = col_character(), HCM2 = col_integer(), PREDDEG = col_integer(), HIGHDEG = col_integer(), REGION = col_integer(), PFTFAC = col_number(), AVGFACSAL = col_number(), PCIP05 = col_number(), PCIP16 = col_number(), PCIP27 = col_number()), na = c("", "NA", 0.0000)), .id = 'File')
 }
+
+
+
+setwd(data.dir)
+mergeData <- multmerge(data.dir)
+setwd(home.dir)
 ```
 
 
@@ -309,7 +316,14 @@ white_completion_rate_plot <- ggplot(black_completion_rate, aes(x = REGION, y = 
 white_completion_rate_plot  
 ```
 
+
+### How have things changed over time?
 ```{r}
+mergedSummary <- mergeData %>% 
+  group_by(File) %>% 
+  summarize(mean_fac_sal = mean(AVGFACSAL, na.rm = TRUE), mean_ethnic_cultural_gender = mean(PCIP05, na.rm = TRUE), mean_math = mean(PCIP27, na.rm = TRUE), mean_language = mean(PCIP16, na.rm=TRUE))
+
+
 
 ```
 
