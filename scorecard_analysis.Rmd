@@ -359,7 +359,37 @@ language_time_plot <- ggplot(mergedSummary, aes(x = file_no, y = mean_language))
               axis.text.x = element_text(angle = 90, hjust = 1), legend.position = "none")
 language_time_plot
 
+sal_time_plot <- ggplot(mergedSummary, aes(x = file_no, y = mean_fac_sal)) +
+  geom_point() + geom_line() +
+  labs(title="Average Faculty Salary over Time", x="Years after 1996", y = "Monthly Salary") +
+  theme(plot.title = element_text(color="#666666", face="bold", size=12, hjust=.5))
+
+sal_time_plot
+
 ```
+
+
+### How is the cost of an institution associated with the highest degree offered?
+```{r}
+cost_v_highdeg <- scorecard_16 %>% 
+  select(HIGHDEG, COSTT4_A, CONTROL, DEBT_MDN) %>% 
+  mutate(CONTROL = factor(CONTROL, labels = c("Public", "Private nonprofit", "Private for-profit"))) %>%
+    drop_na()
+
+cost_v_highdeg_plot <- ggplot(cost_v_highdeg, aes(x= HIGHDEG, y = COSTT4_A, group = HIGHDEG)) +
+  geom_boxplot(aes(fill = HIGHDEG)) +
+  facet_grid(.~CONTROL)
+
+cost_v_highdeg_plot
+
+debt_v_highdeg_plot <- ggplot(cost_v_highdeg, aes(x= HIGHDEG, y = DEBT_MDN, group = HIGHDEG)) +
+  geom_boxplot(aes(fill = HIGHDEG)) +
+  facet_grid(.~CONTROL)
+
+debt_v_highdeg_plot
+  
+```
+
 
 
 
