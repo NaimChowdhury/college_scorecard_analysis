@@ -21,8 +21,8 @@ knitr::opts_chunk$set(fig.height=4, fig.width=6)
 Load in needed libraries 
 ```{r libraries}
 # Run these if you don't have these libraries yet
-# install.packages("tidyverse") 
-# install.packages("data.table")
+install.packages("tidyverse") 
+install.packages("data.table")
 library(tidyverse) # For data processing and visualization
 library(data.table) # For creating tables
 
@@ -33,6 +33,7 @@ text_color = "#525252"
 ### File management
 Create variables for directories
 ```{r file_management}
+setwd('C:/Users/Naeem Cho/Desktop/School Work/Data Munging/college_scorecard_analysis')
 home.dir <- getwd()
 data.dir <- '../CollegeScorecard_Raw_Data'
 output.dir <- '../outputs'
@@ -65,7 +66,7 @@ scorecard_17 <- read_csv(file.path(home.dir, data.dir, "MERGED2017_18_PP.csv"), 
 multmerge = function(mypath){
   #years = c("96_97","97_98", "98_99", "99_00", "00_01", "01_02", "02_03", "03_04", "04_05", "05_06", "06_07", "07_08", "08_09", "09_10", "10_11", "11_12", "12_13", "13_14", "14_15", "15_16", "16_17", "17_18")
   filenames=list.files(path=mypath, pattern = "*.csv") %>% 
-  map_df(~read_csv(., col_types = cols_only(INSTNM = col_character(), HCM2 = col_integer(), PREDDEG = col_integer(), HIGHDEG = col_integer(), REGION = col_integer(), PFTFAC = col_number(), AVGFACSAL = col_number(), PCIP05 = col_number(), PCIP16 = col_number(), PCIP27 = col_number()), na = c("", "NA", 0.0000)), .id = 'File')
+  map_df(~read_csv(., col_types = cols_only(INSTNM = col_character(), HCM2 = col_integer(), PREDDEG = col_integer(), HIGHDEG = col_integer(), REGION = col_integer(), PFTFAC = col_number(), AVGFACSAL = col_number(), PCIP05 = col_number(), PCIP11 = col_number(), PCIP16 = col_number(), PCIP27 = col_number()), na = c("", "NA", 0.0000)), .id = 'file_no')
 }
 
 
@@ -320,10 +321,43 @@ white_completion_rate_plot
 ### How have things changed over time?
 ```{r}
 mergedSummary <- mergeData %>% 
-  group_by(File) %>% 
-  summarize(mean_fac_sal = mean(AVGFACSAL, na.rm = TRUE), mean_ethnic_cultural_gender = mean(PCIP05, na.rm = TRUE), mean_math = mean(PCIP27, na.rm = TRUE), mean_language = mean(PCIP16, na.rm=TRUE))
+  filter(PREDDEG == 3) %>% 
+  group_by(file_no) %>% 
+  summarize(mean_fac_sal = mean(AVGFACSAL, na.rm = TRUE),
+            mean_ethnic_cultural_gender = mean(PCIP05, na.rm = TRUE), 
+            mean_compsi = mean(PCIP11, na.rm = TRUE),
+            mean_math = mean(PCIP27, na.rm = TRUE), 
+            mean_language = mean(PCIP16, na.rm=TRUE)) %>% 
+  mutate(file_no = as.numeric(file_no))
 
 
+gender_time_plot <- ggplot(mergedSummary, aes(x = file_no, y = mean_ethnic_cultural_gender)) +
+  geom_point() + geom_line() +
+  labs(title="Area, Ethnic, Cultural, Gender, and Group Studies Graduates over Time", x="Years after 1996", y = "Percentage of Degrees Awarded") +
+  theme(plot.title = element_text(color="#666666", face="bold", size=12, hjust=.5),
+              axis.text.x = element_text(angle = 90, hjust = 1), legend.position = "none")
+gender_time_plot
+
+compsci_time_plot <- ggplot(mergedSummary, aes(x = file_no, y = mean_compsi)) +
+  geom_point() + geom_line() +
+  labs(title="Computer and Information Sciences and Support Services Graduates over Time", x="Years after 1996", y = "Percentage of Degrees Awarded") +
+  theme(plot.title = element_text(color="#666666", face="bold", size=12, hjust=.5),
+              axis.text.x = element_text(angle = 90, hjust = 1), legend.position = "none")
+compsci_time_plot
+
+math_time_plot <- ggplot(mergedSummary, aes(x = file_no, y = mean_math)) +
+  geom_point() + geom_line() +
+  labs(title="Mathematics and Statistics Graduates over Time", x="Years after 1996", y = "Percentage of Degrees Awarded") +
+  theme(plot.title = element_text(color="#666666", face="bold", size=12, hjust=.5),
+              axis.text.x = element_text(angle = 90, hjust = 1), legend.position = "none")
+math_time_plot
+
+language_time_plot <- ggplot(mergedSummary, aes(x = file_no, y = mean_language)) +
+  geom_point() + geom_line() +
+  labs(title="Foreign Languages, Literatures, and Linguistics Graduates over Time", x="Years after 1996", y = "Percentage of Degrees Awarded") +
+  theme(plot.title = element_text(color="#666666", face="bold", size=12, hjust=.5),
+              axis.text.x = element_text(angle = 90, hjust = 1), legend.position = "none")
+language_time_plot
 
 ```
 
