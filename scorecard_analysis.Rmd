@@ -54,7 +54,7 @@ import_all <- function() {
 ```{r}
 
 scorecard_14 <- read_csv(file.path(data.dir, 'MERGED2014_15_PP.csv'), na = c("NULL", "PrivacySuppressed")) 
-
+scorecard_15 <- read_csv(file.path(data.dir, 'MERGED2015_16_PP.csv'), na = c("NULL", "PrivacySuppressed")) 
 scorecard_16 <- read_csv(file.path(home.dir, data.dir, "MERGED2016_17_PP.csv"), na = c("NULL", "PrivacySuppressed"))
 scorecard_17 <- read_csv(file.path(home.dir, data.dir, "MERGED2017_18_PP.csv"), na = c("NULL", "PrivacySuppressed"))
 ```
@@ -170,7 +170,7 @@ debt_v_accred_plot
 ```{r}
 debt_v_region <- scorecard_14 %>% 
   select(-REGION) %>% 
-  left_join(select(scorecard_17, REGION, UNITID), by = "UNITID") %>% 
+  left_join(select(scorecard_16, REGION, UNITID), by = "UNITID") %>% 
   select(INSTNM, CONTROL, DEBT_MDN, REGION) %>% 
   mutate(REGION = as.factor(REGION)) %>% 
   drop_na()
@@ -237,6 +237,81 @@ DEBT_MDN <- scorecard_16$DEBT_MDN
 ggplot(scorecard_16, aes(x = TUITIONFEE_IN, y = DEBT_MDN, color= factor(scorecard_16$CONTROL))) + geom_point()
 ```
 
+
+### Is it harder for POC to be successful in the South?
+```{r}
+black_completion_rate <- scorecard_14 %>% 
+  select(-REGION) %>% 
+  left_join(select(scorecard_16, REGION, UNITID), by = "UNITID") %>% 
+  select(INSTNM, 
+         CONTROL,
+         C150_4_WHITE,
+         C150_4_BLACK, 
+         C150_4_HISP, 
+         C150_4_ASIAN,
+         C150_4_AIAN,
+         C150_4_NHPI, 
+         REGION) %>% 
+  mutate(REGION = as.factor(REGION)) %>% 
+  drop_na()
+
+
+levels(black_completion_rate$REGION) <- c("U.S. Service Schools",
+                                  "New England (CT, ME, MA, NH, RI, VT)",
+                                  "Mid East (DE, DC, MD, NJ, NY, PA)",
+                                  "Great Lakes (IL, IN, MI, OH, WI)",
+                                  "Plains (IA, KS, MN, MO, NE, ND, SD)",
+                                  "Southeast (AL, AR, FL, GA, KY, LA, MS, NC, SC, TN, VA, WV)",
+                                  "Southwest (AZ, NM, OK, TX)",
+                                  "Rocky Mountains (CO, ID, MT, UT, WY)",
+                                  "Far West (AK, CA, HI, NV, OR, WA)",
+                                  "Outlying Areas (AS, FM, GU, MH, MP, PR, PW, VI")
+
+
+black_completion_rate_plot <- ggplot(black_completion_rate, aes(x = REGION, y = C150_4_BLACK)) +
+  #geom_violin(aes(fill = REGION)) +
+  geom_boxplot(aes(fill = REGION)) +
+  labs(title="Black Grad Rate vs Region", x="Region", y = "Grad Rate") +
+  coord_flip() +
+  theme(plot.title = element_text(color="#666666", face="bold", size=12, hjust=.5),
+              axis.text.x = element_text(angle = 90, hjust = 1), legend.position = "none")
+
+black_completion_rate_plot  
+
+hispanic_completion_rate_plot <- ggplot(black_completion_rate, aes(x = REGION, y = C150_4_HISP)) +
+  #geom_violin(aes(fill = REGION)) +
+  geom_boxplot(aes(fill = REGION)) +
+  labs(title="Hispanic Grad Rate vs Region", x="Region", y = "Grad Rate") +
+  coord_flip() +
+  theme(plot.title = element_text(color="#666666", face="bold", size=12, hjust=.5),
+              axis.text.x = element_text(angle = 90, hjust = 1), legend.position = "none")
+
+hispanic_completion_rate_plot  
+
+asian_completion_rate_plot <- ggplot(black_completion_rate, aes(x = REGION, y = C150_4_ASIAN)) +
+  #geom_violin(aes(fill = REGION)) +
+  geom_boxplot(aes(fill = REGION)) +
+  labs(title="Asian Grad Rate vs Region", x="Region", y = "Grad Rate") +
+  coord_flip() +
+  theme(plot.title = element_text(color="#666666", face="bold", size=12, hjust=.5),
+              axis.text.x = element_text(angle = 90, hjust = 1), legend.position = "none")
+
+asian_completion_rate_plot  
+
+white_completion_rate_plot <- ggplot(black_completion_rate, aes(x = REGION, y = C150_4_WHITE)) +
+  #geom_violin(aes(fill = REGION)) +
+  geom_boxplot(aes(fill = REGION)) +
+  labs(title="White Grad Rate vs Region", x="Region", y = "Grad Rate") +
+  coord_flip() +
+  theme(plot.title = element_text(color="#666666", face="bold", size=12, hjust=.5),
+              axis.text.x = element_text(angle = 90, hjust = 1), legend.position = "none")
+
+white_completion_rate_plot  
+```
+
+```{r}
+
+```
 
 
 
